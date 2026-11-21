@@ -1,0 +1,89 @@
+{{define "retail_cart"}}
+<div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 flex flex-col h-full">
+    <!-- Cart Header -->
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-2">
+            <h2 class="font-bold text-slate-800 text-base">Current Sale</h2>
+            <span id="cartCountBadge" class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-bold">0 items</span>
+        </div>
+        <button type="button" onclick="posCart.clearCart()" class="text-xs text-rose-500 hover:text-rose-700 font-semibold transition">
+            Clear Cart
+        </button>
+    </div>
+
+    <!-- Line Items List -->
+    <div class="flex-1 overflow-y-auto my-3 min-h-[160px] max-h-[260px] divide-y divide-slate-100" id="cartItemsList">
+        <div id="cartEmptyState" class="h-full flex flex-col items-center justify-center text-slate-400 py-10">
+            <svg class="w-10 h-10 mb-2 stroke-current opacity-40" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <p class="text-xs font-medium">Cart is currently empty</p>
+        </div>
+    </div>
+
+    <!-- Bill Breakdown -->
+    <div class="border-t border-slate-100 pt-3 space-y-2 text-xs">
+        <div class="flex justify-between text-slate-500">
+            <span>Subtotal</span>
+            <span id="cartSubtotal" class="font-bold text-slate-800">₱0.00</span>
+        </div>
+
+        <div id="cartDiscountRow" class="hidden flex justify-between text-emerald-600 font-semibold">
+            <span class="flex items-center space-x-1">
+                <span>Concession Discount (20%)</span>
+                <span id="discountEligibleTag" class="text-[10px] bg-emerald-100 px-1.5 py-0.2 rounded font-bold uppercase"></span>
+            </span>
+            <span id="cartDiscountVal">-₱0.00</span>
+        </div>
+
+        <div class="flex justify-between text-indigo-600 font-medium">
+            <span>Cashback Points (0.2%)</span>
+            <span id="cartPoints" class="font-bold">+₱0.00 pts</span>
+        </div>
+
+        <div class="flex justify-between items-baseline pt-2 border-t border-slate-100 text-slate-900">
+            <span class="font-bold text-sm">Total Due</span>
+            <span id="cartTotalDue" class="font-black text-2xl text-slate-900">₱0.00</span>
+        </div>
+    </div>
+
+    <!-- Card Tap & Execution Area -->
+    <div class="mt-4 pt-4 border-t border-slate-100 bg-slate-50/70 -mx-5 -mb-5 p-5 rounded-b-2xl">
+        <div class="mb-3">
+            <label class="block text-xs font-semibold text-slate-700 mb-1">
+                Card Tap / RFID UID
+            </label>
+            <div class="relative">
+                <input type="text" id="posCardInput" placeholder="Scan NFC card or enter number..." class="w-full pl-9 pr-3 py-2 text-xs font-mono border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-white transition">
+                <span class="absolute left-3 top-2.5 text-slate-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H7a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                </span>
+            </div>
+            <!-- Cardholder pre-flight info preview -->
+            <div id="cardInfoBadge" class="hidden mt-2 p-2 bg-indigo-50 border border-indigo-100 rounded-xl text-xs flex justify-between items-center">
+                <div>
+                    <span id="cardHolderName" class="font-bold text-slate-800"></span>
+                    <span id="cardTypePill" class="ml-1 text-[10px] font-bold px-1.5 py-0.5 rounded uppercase"></span>
+                </div>
+                <div class="text-right">
+                    <span class="text-[10px] text-slate-500">Balance: </span>
+                    <span id="cardAvailBalance" class="font-bold text-indigo-700">₱0.00</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2 mb-3">
+            <input type="checkbox" id="applyDiscountCheckbox" checked class="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 border-slate-300">
+            <label for="applyDiscountCheckbox" class="text-xs text-slate-600 select-none">
+                Apply 20% discount if cardholder is Student / Senior / PWD
+            </label>
+        </div>
+
+        <!-- Checkout Action Button -->
+        <button type="button" id="btnPosCheckout" onclick="posCart.processCheckout()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-md transition active:scale-[0.99] flex items-center justify-center space-x-2 text-sm disabled:opacity-50 disabled:pointer-events-none">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span id="btnCheckoutText">Charge UniCard</span>
+        </button>
+
+        <div id="posErrorMessage" class="hidden mt-2 p-2.5 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs"></div>
+    </div>
+</div>
+{{end}}

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}} - UniCard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-100/70 text-slate-800 min-h-screen flex flex-col antialiased">
+
+    <!-- Modular Header Component -->
+    {{template "terminal_header" .}}
+
+    <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center">
+        <!-- Hero Title Banner -->
+        <div class="mb-6">
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight flex items-center space-x-2">
+                <span class="p-2 bg-rose-100 text-rose-600 rounded-xl">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z"/></svg>
+                </span>
+                <span>Manager Refund & Dispute Portal</span>
+            </h1>
+            <p class="text-xs text-slate-500 mt-1">
+                Authorized for store managers and supervisors. Reverse disputed taps, restore card balances, and protect compromised cards.
+            </p>
+        </div>
+
+        <!-- Search / Lookup Box -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 mb-6">
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                Lookup Transaction to Refund
+            </label>
+            <form id="lookupForm" onsubmit="refundController.lookupTransaction(event)" class="flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                    <input type="text" id="lookupTxnInput" placeholder="Enter Transaction Reference ID (e.g. TXN-1741...)" required class="w-full pl-9 pr-3 py-3 text-xs font-mono border border-slate-300 rounded-xl focus:ring-2 focus:ring-rose-500 outline-none bg-slate-50 focus:bg-white transition">
+                    <span class="absolute left-3 top-3.5 text-slate-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </span>
+                </div>
+                <button type="submit" id="btnLookup" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-xl transition text-xs flex items-center justify-center space-x-2 shadow active:scale-95">
+                    <span>Inspect Transaction</span>
+                </button>
+            </form>
+            <div id="lookupError" class="hidden mt-3 p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs"></div>
+        </div>
+
+        <!-- Transaction Details Card & Refund Action (Appears when found) -->
+        <div id="txnInspectionCard" class="hidden bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden animate-in fade-in duration-200">
+            <!-- Header Status Bar -->
+            <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center justify-between gap-3">
+                <div>
+                    <span class="text-xs text-slate-400 font-medium">Transaction ID</span>
+                    <div id="cardTxnId" class="font-mono font-bold text-slate-900 text-sm"></div>
+                </div>
+                <div id="cardTxnStatusBadge" class="text-xs px-3 py-1 rounded-full font-bold uppercase"></div>
+            </div>
+
+            <!-- Details Grid -->
+            <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs border-b border-slate-100">
+                <div class="space-y-2">
+                    <div class="flex justify-between border-b border-slate-100 pb-1.5">
+                        <span class="text-slate-400">Cardholder:</span>
+                        <span id="cardHolder" class="font-semibold text-slate-800"></span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-100 pb-1.5">
+                        <span class="text-slate-400">Card Number:</span>
+                        <span id="cardNum" class="font-mono font-semibold text-slate-800"></span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-100 pb-1.5">
+                        <span class="text-slate-400">Card Status:</span>
+                        <span id="cardStatus" class="font-bold uppercase"></span>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="flex justify-between border-b border-slate-100 pb-1.5">
+                        <span class="text-slate-400">Merchant:</span>
+                        <span id="cardMerchant" class="font-semibold text-slate-800"></span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-100 pb-1.5">
+                        <span class="text-slate-400">Terminal:</span>
+                        <span id="cardTerminal" class="font-semibold text-slate-800"></span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-100 pb-1.5">
+                        <span class="text-slate-400">Date & Time:</span>
+                        <span id="cardDate" class="text-slate-600"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Amount Highlight Banner -->
+            <div class="p-5 bg-slate-50/80 flex items-center justify-between border-b border-slate-100">
+                <span class="text-xs font-bold text-slate-600 uppercase tracking-wider">Refundable Amount</span>
+                <span id="cardAmount" class="text-2xl font-black text-rose-600">₱0.00</span>
+            </div>
+
+            <!-- Refund Authorization Form -->
+            <form id="refundActionForm" onsubmit="refundController.submitRefund(event)" class="p-6 space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Reason for Reversal *</label>
+                    <select id="reasonSelect" required class="w-full px-3 py-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-rose-500 outline-none">
+                        <option value="Accidental Double Tap">Accidental Double Tap</option>
+                        <option value="Customer Return">Customer Return</option>
+                        <option value="Incorrect Charge Amount">Incorrect Charge Amount</option>
+                        <option value="Suspected Unauthorized Tap">Suspected Unauthorized Tap</option>
+                        <option value="Terminal Malfunction">Terminal Malfunction</option>
+                        <option value="Cardholder Dispute / Management Approval">Cardholder Dispute / Management Approval</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Audit Notes (Optional)</label>
+                    <textarea id="notesInput" rows="2" placeholder="Provide extra context for audit tracking..." class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-rose-500 outline-none"></textarea>
+                </div>
+
+                <!-- Card Security / Lock Option -->
+                <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start space-x-3">
+                    <input type="checkbox" id="freezeCardCheckbox" class="mt-0.5 w-4 h-4 text-rose-600 rounded focus:ring-rose-500">
+                    <div>
+                        <label for="freezeCardCheckbox" class="font-bold text-amber-900 block cursor-pointer">
+                            Freeze / Block Cardholder's Card
+                        </label>
+                        <p class="text-amber-800 text-[11px] mt-0.5">
+                            Check this if the cardholder reported a stolen or compromised card. Instantly freezes remaining stored value against any further taps.
+                        </p>
+                    </div>
+                </div>
+
+                <div id="refundActionError" class="hidden p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl"></div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="btnSubmitRefund" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3.5 rounded-xl shadow-md transition active:scale-[0.99] text-sm flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z"/></svg>
+                    <span id="btnSubmitRefundText">Authorize & Issue Manager Refund</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Success Result Banner (After successful refund) -->
+        <div id="refundSuccessCard" class="hidden bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center shadow-sm animate-in fade-in duration-200">
+            <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-emerald-900">Refund Approved & Settled</h3>
+            <p id="successMsg" class="text-xs text-emerald-700 mt-1"></p>
+
+            <div class="mt-4 p-4 bg-white rounded-xl border border-emerald-100 max-w-sm mx-auto text-xs space-y-2 text-left">
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Refund Ref:</span>
+                    <span id="succRefundId" class="font-mono font-bold text-slate-800"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Restored Balance:</span>
+                    <span id="succBalance" class="font-black text-indigo-600"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Points Clawed Back:</span>
+                    <span id="succPoints" class="text-slate-600"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Card Status:</span>
+                    <span id="succCardStatus" class="font-bold uppercase"></span>
+                </div>
+                <div class="flex justify-between border-t border-slate-100 pt-1.5 mt-1">
+                    <span class="text-slate-500">Store / Merchant:</span>
+                    <span id="succStore" class="font-bold text-slate-800"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Approved By (Store Audit):</span>
+                    <span id="succApprovedBy" class="font-mono font-bold text-indigo-700"></span>
+                </div>
+            </div>
+
+            <button type="button" onclick="refundController.reset()" class="mt-5 px-6 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition">
+                Refund Another Transaction
+            </button>
+        </div>
+    </main>
+
+    <script src="/assets/js/refund_portal.js"></script>
+</body>
+</html>

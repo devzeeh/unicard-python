@@ -1,0 +1,71 @@
+{{define "retail_receipt_modal"}}
+<div id="receiptModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 transform transition-all animate-in fade-in zoom-in duration-150">
+        <!-- Success Stamp Header -->
+        <div class="text-center pb-4 border-b border-slate-100">
+            <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <h3 class="text-xl font-black text-slate-800 tracking-tight">Payment Approved</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Contactless Tap Verified</p>
+        </div>
+
+        <!-- Paid Amount Banner -->
+        <div class="my-4 p-4 bg-slate-50 rounded-2xl text-center border border-slate-100">
+            <div class="text-[11px] uppercase tracking-wider font-bold text-slate-400">Total Paid</div>
+            <div id="rcptTotalPaid" class="text-3xl font-black text-slate-900 mt-1">₱0.00</div>
+            <div id="rcptPointsEarned" class="text-xs font-bold text-emerald-600 mt-1">+₱0.00 Cashback Reward (0.2%)</div>
+        </div>
+
+        <!-- Meta Details -->
+        <div class="space-y-2 text-xs border-b border-slate-100 pb-4">
+            <div class="flex justify-between">
+                <span class="text-slate-400">Reference:</span>
+                <span id="rcptTxnId" class="font-mono font-bold text-slate-800"></span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-slate-400">Cardholder:</span>
+                <span id="rcptHolder" class="font-semibold text-slate-800"></span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-slate-400">Card Number:</span>
+                <span id="rcptCardNum" class="font-mono text-slate-700"></span>
+            </div>
+            <div id="rcptDiscountRow" class="hidden flex justify-between text-emerald-600 font-bold">
+                <span>Concession Discount (20%):</span>
+                <span id="rcptDiscountVal"></span>
+            </div>
+            <div class="flex justify-between pt-1 border-t border-dashed border-slate-200">
+                <span class="text-slate-600 font-bold">Remaining Card Balance:</span>
+                <span id="rcptRemainingBalance" class="font-black text-indigo-600 text-sm">₱0.00</span>
+            </div>
+        </div>
+
+        <!-- Itemized Lines Container -->
+        <div id="rcptItemsContainer" class="hidden my-3 max-h-36 overflow-y-auto">
+            <table class="w-full text-left text-xs">
+                <thead>
+                    <tr class="text-slate-400 border-b border-slate-100">
+                        <th class="py-1">Item</th>
+                        <th class="py-1 text-center">Qty</th>
+                        <th class="py-1 text-right">Price</th>
+                    </tr>
+                </thead>
+                <tbody id="rcptItemsList" class="divide-y divide-slate-100 text-slate-700">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Email confirmation toast -->
+        <div class="my-3 flex items-center space-x-2 text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+            <svg class="w-4 h-4 text-indigo-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <span>Receipt automatically dispatched to cardholder's registered email.</span>
+        </div>
+
+        <!-- Close Button -->
+        <button type="button" onclick="posCart.closeReceiptModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition text-sm">
+            Done / Next Sale
+        </button>
+    </div>
+</div>
+{{end}}

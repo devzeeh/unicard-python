@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UniCard - Merchant Sign Up</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/style/index.css" />
+    <link rel="stylesheet" href="/assets/style/password-valid.css" />
+    <script src="/assets/style/tailwind.js"></script>
+</head>
+
+<body class="font-sans antialiased text-gray-900 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    <main class="flex items-center justify-center min-h-screen p-4">
+        <div class="w-full max-w-3xl rounded-2xl shadow-sm border border-gray-100 bg-white overflow-hidden">
+            <section class="w-full p-8 md:p-10">
+                <header class="text-center">
+                    <h1 class="text-3xl font-bold text-gray-900 mt-4">Become a merchant</h1>
+                    <p id="step-subtitle" class="text-gray-600 mt-1">Step 1 of 3: Your Details</p>
+                    <div class="w-full bg-gray-100 h-1.5 rounded-full mt-6 mb-2 overflow-hidden">
+                        <div id="step-progress" class="bg-blue-600 h-full rounded-full transition-all duration-500 ease-out" style="width: 33%"></div>
+                    </div>
+                </header>
+
+                <div id="error-message" class="hidden text-sm text-red-600 text-center bg-red-100 p-3 rounded-lg mt-4"></div>
+
+                <form id="merchantSignupForm" class="mt-8">
+                    <section id="step-1" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="required">
+                                <label for="businessName" class="block text-sm font-medium text-black">Business Name</label>
+                                <div class="mt-1 relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M7.5 8.25a4.5 4.5 0 1 1 9 0v2.25h-9V8.25Zm-1.5 8.25h12.75" /></svg>
+                                    </span>
+                                    <input id="businessName" name="businessName" type="text" required placeholder="Enter your business name" class="w-full px-4 py-3 pl-10 border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out bg-gray-50 hover:bg-gray-100 focus:bg-white" />
+                                </div>
+                            </div>
+                            <div class="required">
+                                <label for="businessType" class="block text-sm font-medium text-black">Business Type</label>
+                                <div class="mt-1 relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75A2.25 2.25 0 0 1 6 4.5h12a2.25 2.25 0 0 1 2.25 2.25v10.5A2.25 2.25 0 0 1 18 19.5H6a2.25 2.25 0 0 1-2.25-2.25V6.75ZM3 9.75h18" /></svg>
+                                    </span>
+                                    <select id="businessType" required class="w-full px-4 py-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out bg-gray-50 hover:bg-gray-100 focus:bg-white appearance-none">
+                                        <option value="" selected>Select industry</option>
+                                        <option value="Retail">Retail</option>
+                                        <option value="Transportation">Transportation</option>
+                                        <option value="Food & Beverage">Food & Beverage</option>
+                                        <option value="Services">Services</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="businessTypeOtherWrap" class="hidden required">
+                            <label for="businessTypeOther" class="block text-sm font-medium text-black">Specify Business Type</label>
+                            <input id="businessTypeOther" name="businessTypeOther" type="text" placeholder="Enter your business type" class="mt-1 w-full px-4 py-3 border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out bg-gray-50 hover:bg-gray-100 focus:bg-white" />
+                        </div>
+
+                        <div class="required">
+                            <label for="businessAddress" class="block text-sm font-medium text-black">Business Address</label>
+                            <div class="mt-1 relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pt-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-3-9a7.5 7.5 0 0 0-7.5 7.5c0 5.25 7.5 13.5 7.5 13.5s7.5-8.25 7.5-13.5A7.5 7.5 0 0 0 12 1.5Z" /></svg>
+                                </span>
+                                <textarea id="businessAddress" name="businessAddress" rows="4" required placeholder="House/Unit No., Street, Barangay, City, Province, Postal Code" class="w-full px-4 py-3 pl-10 border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out bg-gray-50 hover:bg-gray-100 focus:bg-white"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="pt-2">
+                            <button id="btn-step-1" type="button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-base font-medium text-white bg-blue-600 hover:bg-blue-700 transition duration-150 ease-in-out active:scale-[0.98]">
+                                Next
+                            </button>
+                        </div>
+                    </section>
+
+                    <section id="step-2" class="space-y-4 hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="required">
+                                <label for="ownerName" class="block text-sm font-medium text-black">Owner Name</label>
+                                <div class="mt-1 relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
+                                    </span>
+                                    <input id="ownerName" name="ownerName" type="text" required placeholder="Enter owner full name" class="w-full px-4 py-3 pl-10 border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out bg-gray-50 hover:bg-gray-100 focus:bg-white" />
+                                </div>
+                            </div>
+                            <div class="required">
+                                <label for="businessPhone" class="block text-sm font-medium text-black">Business Phone</label>
+                                <div class="mt-1 relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.864-1.068l-4.214-.842a2.25 2.25 0 0 0-2.378.85l-1.493 1.86a11.144 11.144 0 0 1-5.46-5.46l1.86-1.492a2.25 2.25 0 0 0 .85-2.378L8.82 2.114c-.102-.513-.552-.864-1.068-.864H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" /></svg>
+                                    </span>
+                                    <input id="businessPhone" name="businessPhone" type="tel" required placeholder="09123456789" maxlength="11" class="w-full px-4 py-3 pl-10 border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out bg-gray-50 hover:bg-gray-100 focus:bg-white" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="required">
+                            <label for="businessEmail" class="block text-sm font-medium text-black">Business Email</label>
+                            <div class="mt-1 flex gap-3">
+                                <div class="flex-1 relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" /></svg>
+                                    </span>
+                                    <input id="businessEmail" name="businessEmail" type="email" required placeholder="merchant@company.com" class="w-full px-4 py-3 pl-10 border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out bg-gray-50 hover:bg-gray-100 focus:bg-white" />
+                                </div>
+                                <button id="sendOtpBtn" type="button" class="px-4 py-3 rounded-lg bg-slate-900 text-white text-sm font-medium hover:bg-slate-700 transition">Send OTP</button>
+                            </div>
+                        </div>
+
+                        <div class="required">
+                            <label for="otpCode" class="block text-sm font-medium text-black">Email OTP</label>
+                            <div class="mt-1 flex gap-3">
+                                <input id="otpCode" name="otpCode" type="text" maxlength="6" placeholder="Enter 6-digit code" class="flex-1 px-4 py-3 border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out bg-gray-50 hover:bg-gray-100 focus:bg-white" />
+                                <button id="verifyOtpBtn" type="button" class="px-4 py-3 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 text-sm font-medium hover:bg-blue-100 transition">Verify</button>
+                            </div>
+                            <p id="otpStatus" class="hidden mt-2 text-sm"></p>
+                        </div>
+
+                        <div class="pt-2 grid grid-cols-2 gap-4">
+                            <button id="btn-back-2" type="button" class="w-full flex justify-center py-3 px-4 border border-gray-200 rounded-lg text-base font-medium text-gray-700 bg-white hover:bg-gray-50 transition duration-150 ease-in-out active:scale-[0.98]">
+                                Back
+                            </button>
+                            <button id="btn-step-2" type="button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-base font-medium text-white bg-blue-600 hover:bg-blue-700 transition duration-150 ease-in-out active:scale-[0.98]">
+                                Next
+                            </button>
+                        </div>
+                    </section>
+
+                    <section id="step-3" class="space-y-4 hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="required">
+                                <label for="password" class="block text-sm font-medium text-black">Password</label>
+                                <div class="mt-1 relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>
+                                    </span>
+                                    <input id="password" name="password" type="password" autocomplete="new-password" required placeholder="Create a password" class="w-full px-4 py-3 pl-10 border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out bg-gray-50 hover:bg-gray-100 focus:bg-white" />
+                                </div>
+                            </div>
+                            <div class="required">
+                                <label for="confirmPassword" class="block text-sm font-medium text-black">Confirm Password</label>
+                                <div class="mt-1 relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>
+                                    </span>
+                                    <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" required placeholder="Re-enter password" class="w-full px-4 py-3 pl-10 border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out bg-gray-50 hover:bg-gray-100 focus:bg-white" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="validation-checklist" class="pt-2 space-y-1.5">
+                            <div id="length-check" class="flex items-center space-x-2 text-sm text-gray-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                <span>At least 8 characters</span>
+                            </div>
+                            <div id="match-check" class="flex items-center space-x-2 text-sm text-gray-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                <span>Passwords match</span>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 grid grid-cols-2 gap-4">
+                            <button id="btn-back-3" type="button" class="w-full flex justify-center py-3 px-4 border border-gray-200 rounded-lg text-base font-medium text-gray-700 bg-white hover:bg-gray-50 transition duration-150 ease-in-out active:scale-[0.98]">
+                                Back
+                            </button>
+                            <button id="create-account-btn" type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-base font-medium text-white bg-blue-600 hover:bg-blue-700 transition duration-150 ease-in-out active:scale-[0.98]">
+                                Create Account
+                            </button>
+                        </div>
+                    </section>
+                </form>
+
+                <div class="relative mt-6">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">or</span>
+                    </div>
+                </div>
+
+                <footer class="mt-6 text-center">
+                    <p class="text-sm text-gray-600">
+                        Already have an account?
+                        <a href="/login" class="font-medium text-blue-600 hover:text-blue-500">Sign in</a>
+                    </p>
+                </footer>
+            </section>
+        </div>
+    </main>
+
+    <script src="/assets/js/merchant_signup.js"></script>
+</body>
+</html>

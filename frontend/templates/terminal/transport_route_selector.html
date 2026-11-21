@@ -1,0 +1,90 @@
+{{define "transport_route_selector"}}
+<div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col h-full">
+    <!-- Header -->
+    <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+        <div>
+            <h2 class="font-bold text-slate-800 text-base">Route & Distance Control</h2>
+            <p class="text-xs text-slate-400">Configure trip distance for dynamic fare calculation</p>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200/60 rounded-lg">Driver Console</span>
+    </div>
+
+    <!-- Distance Control Presets -->
+    <div class="mb-5">
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+            Trip Distance (Kilometers)
+        </label>
+        <div class="grid grid-cols-5 gap-2 mb-3">
+            <button type="button" onclick="transitTerminal.setDistance(4)" class="km-btn py-2.5 px-2 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl text-xs font-bold text-slate-700 transition active:scale-95 text-center" data-km="4">
+                4 km
+                <span class="block text-[10px] text-slate-400 font-normal">Base</span>
+            </button>
+            <button type="button" onclick="transitTerminal.setDistance(7)" class="km-btn py-2.5 px-2 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl text-xs font-bold text-slate-700 transition active:scale-95 text-center" data-km="7">
+                7 km
+                <span class="block text-[10px] text-slate-400 font-normal">+3 km</span>
+            </button>
+            <button type="button" onclick="transitTerminal.setDistance(10)" class="km-btn py-2.5 px-2 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl text-xs font-bold text-slate-700 transition active:scale-95 text-center" data-km="10">
+                10 km
+                <span class="block text-[10px] text-slate-400 font-normal">+6 km</span>
+            </button>
+            <button type="button" onclick="transitTerminal.setDistance(15)" class="km-btn py-2.5 px-2 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl text-xs font-bold text-slate-700 transition active:scale-95 text-center" data-km="15">
+                15 km
+                <span class="block text-[10px] text-slate-400 font-normal">+11 km</span>
+            </button>
+            <button type="button" onclick="transitTerminal.setDistance(20)" class="km-btn py-2.5 px-2 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl text-xs font-bold text-slate-700 transition active:scale-95 text-center" data-km="20">
+                20 km
+                <span class="block text-[10px] text-slate-400 font-normal">+16 km</span>
+            </button>
+        </div>
+
+        <!-- Custom Distance Slider & Number Input -->
+        <div class="flex items-center space-x-3 bg-slate-50 p-3 rounded-xl border border-slate-200/60">
+            <input type="range" id="distanceRange" min="1" max="50" step="0.5" value="4" oninput="transitTerminal.onRangeInput(this.value)" class="w-full accent-indigo-600 cursor-pointer">
+            <div class="flex items-center space-x-1 flex-shrink-0">
+                <input type="number" id="distanceInput" min="1" max="100" step="0.5" value="4" onchange="transitTerminal.setDistance(this.value)" class="w-16 px-2 py-1 text-center font-bold text-xs border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                <span class="text-xs font-bold text-slate-500">km</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fare Formula Card -->
+    <div class="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-4 mb-5 text-xs">
+        <div class="flex justify-between items-center mb-2">
+            <span class="font-bold text-indigo-900">Dynamic Fare Formula</span>
+            <button type="button" onclick="transitTerminal.toggleFareConfigModal()" class="text-[11px] text-indigo-600 hover:text-indigo-800 font-semibold underline">
+                Configure Rates
+            </button>
+        </div>
+        <div class="space-y-1.5 text-slate-600 font-medium">
+            <div class="flex justify-between">
+                <span>Base Fare (First <span id="formulaBaseKm">4.0</span> km):</span>
+                <span id="formulaBaseFare" class="font-bold text-slate-800">₱15.00</span>
+            </div>
+            <div class="flex justify-between">
+                <span>Additional Rate:</span>
+                <span id="formulaPerKmRate" class="font-bold text-slate-800">₱2.00 / km</span>
+            </div>
+            <div id="formulaPromoRow" class="hidden flex justify-between text-amber-700">
+                <span>Merchant Promo:</span>
+                <span id="formulaPromoVal" class="font-bold">-0%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estimated Fare Preview Box -->
+    <div class="mt-auto border-t border-slate-100 pt-4">
+        <div class="grid grid-cols-2 gap-3 text-center">
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/60">
+                <span class="text-[11px] text-slate-400 font-medium block">Regular Fare</span>
+                <span id="previewRegularFare" class="text-xl font-black text-slate-900 mt-0.5 block">₱15.00</span>
+            </div>
+            <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                <span class="text-[11px] text-emerald-700 font-bold block flex items-center justify-center space-x-1">
+                    <span>Student / PWD (20% OFF)</span>
+                </span>
+                <span id="previewDiscountedFare" class="text-xl font-black text-emerald-600 mt-0.5 block">₱12.00</span>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}
