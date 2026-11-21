@@ -38,11 +38,11 @@ A closed-loop payment card for handling both retail and transit transactions (Wr
 
 | Component | Technology |
 |-----------|-----------|
-| **Backend** | Go 1.25 |
+| **Backend** | python flask |
 | **Database** | MySQL |
 | **Payments** | Xendit |
 | **Hardware** | ESP32 + RC522 RFID |
-| **Frontend** | Go Templates, HTML, JS, Tailwind CSS |
+| **Frontend** | HTML, JS, Tailwind CSS |
 | **Email** | SMTP |
 | **Version Control** | Git & GitHub |
 
@@ -50,13 +50,13 @@ A closed-loop payment card for handling both retail and transit transactions (Wr
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/devzeeh/unicard.git
+   git clone https://github.com/devzeeh/unicard-python.git
    cd unicard
    ```
 
 2. **Database Setup:**
    - Ensure MySQL is running.
-   - Import the database schema from `docs/unicard.sql`.
+   - Import the database schema from `database/unicardv2.sql`.
 
 3. **Environment Setup:**
    - Copy the example environment file:
@@ -90,7 +90,7 @@ Tap Card -> Validate Balance -> Deduct Payment -> Update Data -> Earn Rewards ->
 
 This project was made possible by the incredible work of the following communities and technologies:
 
-- **The Go Community** - For a robust and efficient backend language.
+- **The Python Community** - For a robust and efficient backend language.
 - **MySQL** - For a reliable and powerful database solution.
 - **ESP & Arduino Developers** - For versatile microcontroller support.
 - **Tailwind Labs** - For a utility-first CSS framework.
